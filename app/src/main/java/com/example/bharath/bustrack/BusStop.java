@@ -71,6 +71,7 @@ public class BusStop extends AppCompatActivity {
 
                 Intent i=new Intent(BusStop.this,MainActivity.class).putExtra("stop",stop.getText().toString()).putExtra("bus",bus.getText().toString());
                 startActivity(i);
+                finish();
             }
         });
 

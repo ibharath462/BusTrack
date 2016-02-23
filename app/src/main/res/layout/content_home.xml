@@ -28,8 +28,7 @@
         card_view:cardElevation="2dp"
             card_view:cardBackgroundColor="#EF5350"
         android:nestedScrollingEnabled="true"
-
-        android:id="@+id/view">
+        android:id="@+id/view0">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

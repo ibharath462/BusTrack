@@ -2,6 +2,7 @@ package com.example.bharath.bustrack;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -51,6 +53,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Handler;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     String bus;
     Double lats=13.026611111111112,longs=80.26583333333333;
     GoogleMap t=null;
+    TextView durr;
+    info.hoang8f.widget.FButton back;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -98,19 +103,30 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         s=getIntent().getStringExtra("stop");
         bus=getIntent().getStringExtra("bus");
+        durr=(TextView)findViewById(R.id.durr);
+        back=(info.hoang8f.widget.FButton)findViewById(R.id.back);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(MainActivity.this,BusStop.class);
+                startActivity(i);
+                finish();
+            }
+        });
 
 
 
         if(bus.equals("5A")) {
 
             st5A=stops5A.valueOf(s);
-            Btrack = new Firebase("https://bustrackk.firebaseio.com/bus/0/");
+            Btrack = new Firebase("https://bustrack.firebaseio.com/bus/0/");
             // Toast.makeText(getApplicationContext(),"Bus is "+bus,Toast.LENGTH_LONG).show();
         }
         else if(bus.equals("T70"))
         {
             stt70=stopsT70.valueOf(s);
-            Btrack = new Firebase("https://bustrackk.firebaseio.com/bus/1/");
+            Btrack = new Firebase("https://bustrack.firebaseio.com/bus/1/");
             //Toast.makeText(getApplicationContext(),"Bus is "+bus,Toast.LENGTH_LONG).show();
         }
         else
@@ -255,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 busPos(lats,longs,t,s,latSTOP,lonSTOP,bus);
                 JSONAsyncTask JSONfetcher = new JSONAsyncTask();
                 JSONfetcher.execute(lats.toString(),longs.toString(),s);
-                Toast.makeText(getApplicationContext(),"Data Changed..",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Data Changed..",Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -316,8 +332,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPreExecute() {
 
-            progressDialog.setMessage("Downloading your results...");
-            progressDialog.show();
+            //progressDialog.setMessage("Downloading your results...");
+            //progressDialog.show();
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 public void onCancel(DialogInterface arg0) {
                     JSONAsyncTask.this.cancel(true);
@@ -509,7 +525,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 e.printStackTrace();
             }
 
-            this.progressDialog.dismiss();
+            //this.progressDialog.dismiss();
 
             int sec;
 
@@ -527,7 +543,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), "Duration:" + finalDuration +" mins and "+fsec+" seconds", Toast.LENGTH_LONG).show();
+                   // Toast.makeText(getApplicationContext(), "Duration:" + finalDuration +" mins and"+" "+fsec+" seconds", Toast.LENGTH_LONG).show();
+                    durr.setText("Estd.Time of arrival:" + finalDuration+" mins and "+fsec+" seconds");
                 }
             });
 

@@ -12,7 +12,7 @@ import android.view.View;
 public class Home extends AppCompatActivity {
 
 
-    CardView v;
+    CardView v,d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +23,7 @@ public class Home extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         v=(CardView)findViewById(R.id.view1);
+        d=(CardView)findViewById(R.id.view0);
 
         v.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,6 +35,14 @@ public class Home extends AppCompatActivity {
             }
         });
 
+        d.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i=new Intent(Home.this,Login.class);
+                startActivity(i);
+                finish();
+            }
+        });
 
     }
 
