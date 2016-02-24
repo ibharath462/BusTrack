@@ -3,6 +3,7 @@ package com.example.bharath.bustrack;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -59,7 +60,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback{
 
-    String s;
+    String s,id;
     String bus;
     Double lats=13.026611111111112,longs=80.26583333333333;
     GoogleMap t=null;
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        if(bus.equals("5A")) {
+        if(bus.equals("5B")) {
 
             st5A=stops5A.valueOf(s);
             Btrack = new Firebase("https://bustrack.firebaseio.com/bus/0/");
@@ -260,6 +261,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         toolbar.setTitle("BusTrack");
         setSupportActionBar(toolbar);
 
+        durr.setText("Estimating the time of arrival, calculation speed may vary according to your network.");
+        durr.setTextColor(Color.BLACK);
 
 
         Btrack.addValueEventListener(new ValueEventListener() {
@@ -268,6 +271,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 HashMap<Double, Object> data = (HashMap<Double, Object>) dataSnapshot.getValue();
                 lats = (Double) data.get("latitude");
                 longs = (Double) data.get("longitude");
+                id=(String)data.get("id");
                 busPos(lats,longs,t,s,latSTOP,lonSTOP,bus);
                 JSONAsyncTask JSONfetcher = new JSONAsyncTask();
                 JSONfetcher.execute(lats.toString(),longs.toString(),s);
@@ -288,8 +292,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         LatLng stop=new LatLng(x,y);
 
         Marker bus = m.addMarker(new MarkerOptions()
-                .position(new LatLng(lat,lon))
+                .position(new LatLng(lat, lon))
                 .title(z)
+                .snippet(id)
                 .icon(BitmapDescriptorFactory
                         .fromResource(R.drawable.bus1)));
 
@@ -334,6 +339,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             //progressDialog.setMessage("Downloading your results...");
             //progressDialog.show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    durr.setTextColor(Color.BLACK);
+                }
+            });
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 public void onCancel(DialogInterface arg0) {
                     JSONAsyncTask.this.cancel(true);
@@ -469,6 +480,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 String URL="https://maps.googleapis.com/maps/api/directions/json?origin"+origin+"&destination="+destination+"&sensor=false&mode=driving&key=AIzaSyAkVgHeJ7P4QAmCRjX6LK7YlTpCuAcdjDQ";
 
+
                 HttpGet httppost = new HttpGet(URL);
                 HttpClient httpclient = new DefaultHttpClient();
                 HttpResponse response = httpclient.execute(httppost);
@@ -543,8 +555,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
                    // Toast.makeText(getApplicationContext(), "Duration:" + finalDuration +" mins and"+" "+fsec+" seconds", Toast.LENGTH_LONG).show();
                     durr.setText("Estd.Time of arrival:" + finalDuration+" mins and "+fsec+" seconds");
+                    durr.setTextColor(Color.RED);
                 }
             });
 

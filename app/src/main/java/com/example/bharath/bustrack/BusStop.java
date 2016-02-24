@@ -31,7 +31,7 @@ public class BusStop extends AppCompatActivity {
         go=(info.hoang8f.widget.FButton)findViewById(R.id.primary_button);
 
 
-        bus.setItems("T70", "45A", "23C","5A");
+        bus.setItems("T70", "45A", "23C","5B");
         stop.setItems("CMBT", "MMDA_Colony", "Jaffarkhanpet", "Cipet", "Guindy_Tvk_Estate", "Anna_University", "Adyar_BS", "Adyar_Depot", "Thiruvanmiyur");
 
         bus.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {

@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -26,6 +27,8 @@ public class Driver extends AppCompatActivity implements LocationListener {
     Firebase Btrack = null;
 
     info.hoang8f.widget.FButton logout;
+
+    com.rey.material.widget.RadioButton from,to;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +42,15 @@ public class Driver extends AppCompatActivity implements LocationListener {
         setSupportActionBar(toolbar);
 
         String bus = null;
+
+       String stop=null;
+
         bus = getIntent().getStringExtra("bus");
 
         logout = (info.hoang8f.widget.FButton) findViewById(R.id.primary_button);
+
+        from=(com.rey.material.widget.RadioButton)findViewById(R.id.from);
+        to=(com.rey.material.widget.RadioButton)findViewById(R.id.to);
 
         //Toast.makeText(getApplicationContext(),""+bus,Toast.LENGTH_SHORT).show();
 
@@ -49,9 +58,39 @@ public class Driver extends AppCompatActivity implements LocationListener {
         if (bus.equals("5A")) {
 
             Btrack = new Firebase("https://bustrack.firebaseio.com/bus/0/");
+            stop="Mylapore";
         } else if (bus.equals("T70")) {
             Btrack = new Firebase("https://bustrack.firebaseio.com/bus/1/");
+            stop="Koyambedu";
         }
+
+        from.setText("From "+stop);
+        to.setText("To "+stop);
+
+        final String finalStop = stop;
+        from.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    Btrack.child("id").setValue("From " + finalStop);
+                    to.setChecked(false);
+                    from.setChecked(true);
+                }
+
+            }
+        });
+
+        to.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    Btrack.child("id").setValue("To " + finalStop);
+                    from.setChecked(false);
+                    to.setChecked(true);
+                }
+
+            }
+        });
 
 
         final LocationManager locationManager = (LocationManager)

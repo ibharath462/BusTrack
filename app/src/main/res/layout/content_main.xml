@@ -35,7 +35,7 @@
             android:textColor="#D50000"
             android:id="@+id/durr"
             android:textStyle="bold"
-            android:text="Estd.Time of arrival:"/>
+            android:text="Estimating the time of arrival, calculation may vary according to your network."/>
         <info.hoang8f.widget.FButton
             android:id="@+id/back"
             android:layout_width="wrap_content"
